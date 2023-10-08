@@ -76,6 +76,7 @@ protected:
 	wxTextCtrl* house_filename_ctrl;
 	wxTextCtrl* spawn_filename_ctrl;
 	wxTextCtrl* spawn_npc_filename_ctrl;
+	wxTextCtrl* zone_filename_ctrl;
 
 	DECLARE_EVENT_TABLE();
 };
@@ -182,7 +183,7 @@ protected:
 * A wxListBox that can be sorted without using style wxLB_SORT.
 * wxLB_SORT does not work properly on Windows and causes errors on macOS.
 */
-class SortableListBox : public wxListBox
+class SortableListBox : public wxCheckListBox
 {
 public:
 	SortableListBox(wxWindow* parent, wxWindowID id, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize);

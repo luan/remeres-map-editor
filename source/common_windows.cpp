@@ -129,6 +129,11 @@ MapPropertiesWindow::MapPropertiesWindow(wxWindow* parent, MapTab* view, Editor&
 		);
 
 	grid_sizer->Add(
+		zone_filename_ctrl =
+			newd wxTextCtrl(this, wxID_ANY, wxstr(map.getZoneFilename())), 1, wxEXPAND
+		);
+
+	grid_sizer->Add(
 		newd wxStaticText(this, wxID_ANY, "External monster file")
 		);
 
@@ -354,6 +359,7 @@ void MapPropertiesWindow::OnClickOK(wxCommandEvent& WXUNUSED(event))
 	map.setHouseFilename(nstr(house_filename_ctrl->GetValue()));
 	map.setSpawnMonsterFilename(nstr(spawn_filename_ctrl->GetValue()));
 	map.setSpawnNpcFilename(nstr(spawn_npc_filename_ctrl->GetValue()));
+	map.setZoneFilename(nstr(zone_filename_ctrl->GetValue()));
 
 	// Only resize if we have to
 	int new_map_width = width_spin->GetValue();
@@ -1044,13 +1050,12 @@ wxCoord FindDialogListBox::OnMeasureItem(size_t n) const
 // wxListBox that can be sorted
 
 SortableListBox::SortableListBox(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size)
-: wxListBox(parent, id, pos, size, 0, nullptr, wxLB_SINGLE | wxLB_NEEDED_SB)
+: wxCheckListBox(parent, id, pos, size, 0, nullptr, wxLB_SINGLE | wxLB_NEEDED_SB)
 {}
 
 SortableListBox::~SortableListBox() {}
 
 void SortableListBox::Sort() {
-
 	if (GetCount() == 0)
 		return;
 

@@ -93,7 +93,7 @@ void NumberTextCtrl::SetMaxValue(long value)
 
 void NumberTextCtrl::CheckRange()
 {
-	wxString text = GetValue();
+	auto text = GetValue().ToStdString();
 	wxString ntext;
 
 	for(size_t s = 0; s < text.size(); ++s) {

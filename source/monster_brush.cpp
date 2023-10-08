@@ -73,6 +73,19 @@ void MonsterBrush::undraw(BaseMap* map, Tile* tile)
 	tile->monster = nullptr;
 }
 
+void MonsterBrush::drawMonster(BaseMap* map, Tile* tile, void* parameter)
+{
+	ASSERT(tile);
+	ASSERT(parameter);
+	if(canDraw(map, tile->getPosition())) {
+		undraw(map, tile);
+		if(monster_type) {
+			tile->monster = newd Monster(monster_type);
+			tile->monster->setSpawnMonsterTime(*(int*)parameter);
+		}
+	}
+}
+
 void MonsterBrush::draw(BaseMap* map, Tile* tile, void* parameter)
 {
 	ASSERT(tile);
@@ -84,8 +97,7 @@ void MonsterBrush::draw(BaseMap* map, Tile* tile, void* parameter)
 				// manually place spawnMonster on location
 				tile->spawnMonster = newd SpawnMonster(1);
 			}
-			tile->monster = newd Monster(monster_type);
-			tile->monster->setSpawnMonsterTime(*(int*)parameter);
+			drawMonster(map, tile, parameter);
 		}
 	}
 }

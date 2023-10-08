@@ -85,6 +85,7 @@ Editor::Editor(CopyBuffer& copybuffer) :
 	map.spawnmonsterfile = sname + "-monster.xml";
 	map.spawnnpcfile = sname + "-npc.xml";
 	map.housefile = sname + "-house.xml";
+	map.zonefile = sname + "-zones.xml";
 	map.description = "No map description available.";
 	map.unnamed = true;
 
@@ -290,6 +291,8 @@ void Editor::saveMap(FileName filename, bool showdialog)
 		map.spawnnpcfile = nstr(_name.GetFullName());
 		_name.SetName(filename.GetName() + "-house");
 		map.housefile = nstr(_name.GetFullName());
+		_name.SetName(filename.GetName() + "-zones");
+		map.zonefile = nstr(_name.GetFullName());
 
 		map.unnamed = false;
 	}
@@ -301,7 +304,7 @@ void Editor::saveMap(FileName filename, bool showdialog)
 
 	// Make temporary backups
 	//converter.Assign(wxstr(savefile));
-	std::string backup_otbm, backup_house, backup_spawn, backup_spawn_npc;
+	std::string backup_otbm, backup_house, backup_spawn, backup_spawn_npc, backup_zones;
 
 	if(converter.GetExt() == "otgz") {
 		save_otgz = true;
@@ -336,6 +339,13 @@ void Editor::saveMap(FileName filename, bool showdialog)
 			backup_spawn_npc = map_path + nstr(converter.GetName()) + ".xml~";
 			std::remove(backup_spawn_npc.c_str());
 			std::rename((map_path + map.spawnnpcfile).c_str(), backup_spawn_npc.c_str());
+		}
+
+		converter.SetFullName(wxstr(map.zonefile));
+		if(converter.FileExists()) {
+			backup_zones = map_path + nstr(converter.GetName()) + ".xml~";
+			std::remove(backup_zones.c_str());
+			std::rename((map_path + map.zonefile).c_str(), backup_zones.c_str());
 		}
 	}
 
@@ -394,6 +404,12 @@ void Editor::saveMap(FileName filename, bool showdialog)
 				std::rename(backup_spawn_npc.c_str(), std::string(spawnnpc_filename + ".xml").c_str());
 			}
 
+			if(!backup_zones.empty()) {
+				converter.SetFullName(wxstr(map.zonefile));
+				std::string zones_filename = map_path + nstr(converter.GetName());
+				std::rename(backup_zones.c_str(), std::string(zones_filename + ".xml").c_str());
+			}
+
 			// Display the error
 			g_gui.PopupDialog("Error", "Could not save, unable to open target for writing.", wxOK);
 		}
@@ -449,6 +465,12 @@ void Editor::saveMap(FileName filename, bool showdialog)
 			converter.SetFullName(wxstr(map.spawnnpcfile));
 			std::string spawnnpc_filename = map_path + nstr(converter.GetName());
 			std::rename(backup_spawn_npc.c_str(), std::string(spawnnpc_filename + "." + date.str() + ".xml").c_str());
+		}
+
+		if(!backup_zones.empty()) {
+			converter.SetFullName(wxstr(map.zonefile));
+			std::string zones_filename = map_path + nstr(converter.GetName());
+			std::rename(backup_zones.c_str(), std::string(zones_filename + "." + date.str() + ".xml").c_str());
 		}
 	} else {
 		// Delete the temporary files

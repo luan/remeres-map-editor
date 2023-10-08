@@ -25,6 +25,7 @@
 #include "spawn_monster.h"
 #include "complexitem.h"
 #include "waypoints.h"
+#include "zones.h"
 #include "templates.h"
 #include "spawn_npc.h"
 
@@ -37,6 +38,7 @@ public:
 
 	// Operations on the entire map
 	void cleanInvalidTiles(bool showdialog = false);
+	void cleanDeletedZones(bool showdialog = false);
 	// Save a bmp image of the minimap
 	bool exportMinimap(FileName filename, int floor = rme::MapGroundLayer, bool showdialog = false);
 	//
@@ -93,6 +95,7 @@ public:
 	std::string getHouseFilename() const {return housefile;}
 	std::string getSpawnFilename() const {return spawnmonsterfile;}
 	std::string getSpawnNpcFilename() const {return spawnnpcfile;}
+	std::string getZoneFilename() const {return zonefile;}
 
 	// Set some map data
 	void setWidth(int new_width);
@@ -101,6 +104,7 @@ public:
 	void setHouseFilename(const std::string& new_housefile);
 	void setSpawnMonsterFilename(const std::string& new_spawnmonsterfile);
 	void setSpawnNpcFilename(const std::string& new_npcfile);
+	void setZoneFilename(const std::string& new_zonefile);
 
 	void flagAsNamed() noexcept { unnamed = false; }
 
@@ -129,6 +133,7 @@ protected:
 	std::string spawnmonsterfile; // The maps spawnmonsterfile
 	std::string spawnnpcfile; // The maps spawnnpcfile
 	std::string housefile; // The housefile
+	std::string zonefile; // The zonefile
 
 public:
 	Towns towns;
@@ -150,6 +155,7 @@ protected:
 
 public:
 	Waypoints waypoints;
+	Zones zones;
 
 private:
 	std::vector<uint16_t> uniqueIds;
@@ -272,5 +278,7 @@ inline int64_t RemoveItemOnMap(Map& map, RemoveIfType& condition, bool selectedO
 	}
 	return removed;
 }
+
+int64_t RemoveMonstersOnMap(Map &map, bool selectedOnly);
 
 #endif

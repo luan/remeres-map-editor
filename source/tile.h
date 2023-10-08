@@ -58,6 +58,7 @@ public: // Members
 	Npc* npc;
 	SpawnNpc* spawnNpc;
 	uint32_t house_id; // House id for this tile (pointer not safe)
+	std::set<unsigned int> zones;
 
 public:
 	// ALWAYS use this constructor if the Tile is EVER going to be placed on a map
@@ -83,7 +84,7 @@ public:
 	int getZ() const noexcept { return location->getZ(); }
 
 	uint16_t getGroundSpeed() const noexcept;
-	
+
 public: //Functions
 	// Absorb the other tile into this tile
 	void merge(Tile* other);
@@ -208,6 +209,18 @@ public: //Functions
 	void setStatFlags(uint16_t flags);
 	void unsetStatFlags(uint16_t flags);
 	uint16_t getStatFlags() const noexcept;
+
+	bool hasZone(unsigned int zone) const {
+		return zones.find(zone) != zones.end();
+	}
+
+	void addZone(unsigned int zone) {
+		zones.insert(zone);
+	}
+
+	void removeZone(unsigned int zone) {
+		zones.erase(zone);
+	}
 
 protected:
 	union {

@@ -44,6 +44,7 @@
 #include "raw_brush.h"
 #include "table_brush.h"
 #include "waypoint_brush.h"
+#include "zone_brush.h"
 #include "light_drawer.h"
 
 DrawingOptions::DrawingOptions()
@@ -453,6 +454,10 @@ void MapDrawer::DrawSecondaryMap(int map_z)
 					r = r/3*2;
 					b = r/3*2;
 				}
+				if(options.show_special_tiles && tile->hasZone(g_gui.zone_brush->getZone())) {
+					r = b/3*2;
+					b = b/3*2;
+				}
 				if(options.show_special_tiles && tile->getMapFlags() & TILESTATE_NOLOGOUT) {
 					b /= 2;
 				}
@@ -557,7 +562,7 @@ void MapDrawer::DrawGrid()
 {
 	glDisable(GL_TEXTURE_2D);
 	glColor4ub(255, 255, 255, 128);
-	glBegin(GL_LINES); 
+	glBegin(GL_LINES);
 
 	for(int y = start_y; y < end_y; ++y) {
 		int py = y * rme::TileSize - view_scroll_y;
@@ -1536,6 +1541,17 @@ void MapDrawer::DrawTile(TileLocation* location)
 			if(showspecial && tile->getMapFlags() & TILESTATE_PVPZONE) {
 				g = r / 4;
 				b = b / 3 * 2;
+			}
+
+			bool zone_active = tile->hasZone(g_gui.zone_brush->getZone());
+			if(showspecial && zone_active) {
+				r /= 2;
+				g /= 2;
+			}
+			if(showspecial && ((!tile->zones.empty() && !zone_active) || tile->zones.size() > 1)) {
+				r /= 1.3;
+				g /= 1.2;
+				b /= 1.1;
 			}
 
 			if(showspecial && tile->getMapFlags() & TILESTATE_NOLOGOUT) {

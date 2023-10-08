@@ -28,6 +28,7 @@
 #include "palette_monster.h"
 #include "palette_npc.h"
 #include "palette_waypoints.h"
+#include "palette_zones.h"
 
 #include "house_brush.h"
 #include "map.h"
@@ -53,6 +54,7 @@ PaletteWindow::PaletteWindow(wxWindow* parent, const TilesetContainer& tilesets)
 	npc_palette(nullptr),
 	house_palette(nullptr),
 	waypoint_palette(nullptr),
+	zones_palette(nullptr),
 	raw_palette(nullptr)
 {
 	SetMinSize(wxSize(225, 250));
@@ -74,6 +76,9 @@ PaletteWindow::PaletteWindow(wxWindow* parent, const TilesetContainer& tilesets)
 
 	waypoint_palette = static_cast<WaypointPalettePanel*>(CreateWaypointPalette(choicebook, tilesets));
 	choicebook->AddPage(waypoint_palette, waypoint_palette->GetName());
+
+	zones_palette = static_cast<ZonesPalettePanel*>(CreateZonesPalette(choicebook, tilesets));
+	choicebook->AddPage(zones_palette, zones_palette->GetName());
 
 	monster_palette = static_cast<MonsterPalettePanel*>(CreateMonsterPalette(choicebook, tilesets));
 	choicebook->AddPage(monster_palette, monster_palette->GetName());
@@ -158,6 +163,12 @@ PalettePanel* PaletteWindow::CreateWaypointPalette(wxWindow *parent, const Tiles
 	return panel;
 }
 
+PalettePanel* PaletteWindow::CreateZonesPalette(wxWindow *parent, const TilesetContainer& tilesets)
+{
+	ZonesPalettePanel* panel = newd ZonesPalettePanel(parent);
+	return panel;
+}
+
 PalettePanel* PaletteWindow::CreateMonsterPalette(wxWindow *parent, const TilesetContainer& tilesets)
 {
 	MonsterPalettePanel* panel = newd MonsterPalettePanel(parent);
@@ -199,6 +210,9 @@ void PaletteWindow::ReloadSettings(Map* map)
 	if(waypoint_palette) {
 		waypoint_palette->SetMap(map);
 	}
+	if(zones_palette) {
+		zones_palette->SetMap(map);
+	}
 	if(item_palette) {
 		item_palette->SetListType(wxstr(g_settings.getString(Config::PALETTE_ITEM_STYLE)));
 		item_palette->SetToolbarIconSize(g_settings.getBoolean(Config::USE_LARGE_ITEM_SIZEBAR));
@@ -239,6 +253,9 @@ void PaletteWindow::InvalidateContents()
 	}
 	if(waypoint_palette) {
 		waypoint_palette->OnUpdate();
+	}
+	if(zones_palette) {
+		zones_palette->OnUpdate();
 	}
 }
 
@@ -432,6 +449,10 @@ void PaletteWindow::OnUpdate(Map* map)
 	if(waypoint_palette) {
 		waypoint_palette->SetMap(map);
 		waypoint_palette->OnUpdate();
+	}
+	if(zones_palette) {
+		zones_palette->SetMap(map);
+		zones_palette->OnUpdate();
 	}
 }
 

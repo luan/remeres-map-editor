@@ -1982,7 +1982,8 @@ void MapCanvas::OnCopyPosition(wxCommandEvent& WXUNUSED(event))
 	Position minPos = editor.getSelection().minPosition();
 	Position maxPos = editor.getSelection().maxPosition();
 	if(minPos != maxPos) {
-		posToClipboard(minPos.x, minPos.y, minPos.z, maxPos.x, maxPos.y, maxPos.z);
+		int format = g_settings.getInteger(Config::COPY_AREA_FORMAT);
+		posToClipboard(minPos.x, minPos.y, minPos.z, maxPos.x, maxPos.y, maxPos.z, format);
 	} else {
 		int format = g_settings.getInteger(Config::COPY_POSITION_FORMAT);
 		posToClipboard(minPos.x, minPos.y, minPos.z, format);
